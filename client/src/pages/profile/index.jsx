@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useId, useRef, useState } from 'react';
 import { useAppStore } from "@/store";
 import { useNavigate } from 'react-router-dom';
 import { IoArrowBack } from 'react-icons/io5';
@@ -8,6 +8,9 @@ import { FaPlus, FaTrash } from "react-icons/fa";
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Background from "@/assets/login4.png";
+import { toast } from 'sonner';
+import apiClient from '@/lib/api-client';
+import { ADD_PROFILE_IMAGE_ROUTE, HOST, REMOVE_PROFILE_IMAGE_ROUTE, UPDATE_PROFILE_ROUTE } from '@/utils/constants';
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -17,14 +20,98 @@ const Profile = () => {
   const [image, setImage] = useState(null);
   const [hovered, setHovered] = useState(false);
   const [selectedColor, setSelectedColor] = useState(0);
+  const fileInputRef = useRef(null);
+  
+  useEffect(() => {
+    if(userInfo.profileSetup){
+      setFirstName(userInfo.firstName);
+      setLastName(userInfo.lastName);
+      setSelectedColor(userInfo.color);
+    }
+    if(userInfo.image){
+      const imageUrl = `${HOST}${userInfo.image}`;
+      console.log('Image URL:', imageUrl);
+      setImage(imageUrl);
+
+    }
+  }, [userInfo]);
+
+  const validateProfile = () => {
+    if(!firstName) {
+      toast.error("First Name isrequired")
+      return false;
+    } 
+    if(!lastName){
+      toast.error("Last Name is Required")
+      return false;
+    }
+    return true;
+  }
+    
 
   if (!userInfo) {
     return <div>Loading...</div>;
   }
 
   const saveChanges = async () => {
-    // Save changes logic here
+    if(validateProfile()){
+      try{
+        const res = await apiClient.post(UPDATE_PROFILE_ROUTE, 
+          {firstName, lastName, color:selectedColor},
+          {withCredentials:true})
+          if(res.status == 200 && res.data){
+            setUserInfo({...res.data});
+            toast.success("Hurrey Profile updated successfully")
+            navigate("/chat");
+          }
+      }catch(err){
+        console.log(err)
+      }
+    }
   };
+
+  const handleNavigate = () => {
+    if(userInfo.profileSetup){
+      navigate("/chat")
+    }else{
+      toast.error("please setup the profile, buddy")
+    }
+  }
+
+  const handleFileInputClick = () => {
+    fileInputRef.current.click();
+  }
+
+  const handleImageChange = async (event) => {
+    const file = event.target.files[0];
+  
+    if (file) {
+      const formData = new FormData();
+      formData.append("profile-image", file);
+  
+        const res = await apiClient.post(ADD_PROFILE_IMAGE_ROUTE, formData, { withCredentials: true });
+  
+        if (res.status == 200 && res.data.image) {
+          setUserInfo({...userInfo, image: res.data.image})
+          setImage(res.data.image);
+          toast.success("Profile pic looks cool!");
+        }
+    }
+  };
+  
+
+  const handleDeleteImage = async () => {
+    try{
+      const res = await apiClient.delete(REMOVE_PROFILE_IMAGE_ROUTE, {withCredentials: true});
+      if(res.status==200){
+        setUserInfo({...userInfo, image: null});
+        toast.success("Image removed successfully")
+        setImage(null)
+      }
+    }catch(err){
+      console.log(err);
+    }
+  }
 
   return (
     <div className='h-screen flex items-center justify-center bg-cover bg-center' style={{ backgroundImage: `url(${Background})` }}>
@@ -53,14 +140,16 @@ const Profile = () => {
                 </Avatar>
                 {
                   hovered && (
-                    <div className='absolute flex items-center justify-center bg-black/50 rounded-full cursor-pointer'
-                      style={{ width: '70%', height: '90%' }}>
+                    <div className='absolute insert-0 flex items-center justify-center bg-black/50 rounded-full cursor-pointer'
+                      style={{ width: '70%', height: '90%' }}
+                      onClick={image ? handleDeleteImage: handleFileInputClick}>
                       {
                         image ? <FaTrash className='text-white' size={48} /> : <FaPlus className='text-white' size={48} />
                       }
                     </div>
                   )
                 }
+                <input type="file" ref={fileInputRef} className='hidden' onChange={handleImageChange} name='profile-image' accept='.png, .jpg, .jpeg, .svg, .webp' />
               </div>
               <div className='flex flex-col gap-5 text-gray-300'>
                 <Input placeholder="Email" type="email" disabled value={userInfo.email} className="rounded-lg p-4 bg-gray-700 border-none text-gray-300" />

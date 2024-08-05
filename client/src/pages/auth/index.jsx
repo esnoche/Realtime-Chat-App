@@ -51,7 +51,7 @@ const Auth = () => {
   //handleLogin
   const handleLogin = async () => {
     if(validateLogin()) {
-      const response = await axios.post("http://localhost:2668/api/auth/login", { email, password }, { withCredentials: true })
+      const response = await apiClient.post(LOGIN_ROUTE, { email, password }, { withCredentials: true })
       if(response.data.user.id){
         setUserInfo(response.data.user)
         if(response.data.user.profileSetup){
