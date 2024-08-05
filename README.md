@@ -35,25 +35,39 @@ SpeedenChat is designed to offer real-time messaging capabilities with features 
 ```plaintext
 SpeedenChat/
 ├── client/
-│   ├── public/
 │   ├── src/
+│   │   ├── assets/
 │   │   ├── components/
+│   │   ├── lib/
 │   │   ├── pages/
-│   │   ├── 
 │   │   ├── store/
-│   │   └── App.jsx
-│   └── index.jsx
+│   │   ├── utils/
+│   │   ├── App.css
+│   │   ├── App.jsx
+│   │   ├── index.css
+│   │   └── main.jsx
+│   ├── .env
+│   ├── .eslintrc.cjs
+│   ├── .gitignore
+│   ├── components.json
+│   ├── index.html
+│   ├── jsconfig.json
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── postcss.config.js
+│   ├── tailwind.config.js
+│   └── vite.config.js
 ├── server/
 │   ├── controllers/
-│   ├── middleware/
+│   ├── middlewares/
 │   ├── models/
+│   ├── node_modules/
 │   ├── routes/
+│   ├── .env
 │   ├── index.js
-│   └── config/
-├── .gitignore
-├── package.json
+│   ├── package-lock.json
+│   └── package.json
 ├── README.md
-└── tailwind.config.js
 ```
 
 ## Usage
