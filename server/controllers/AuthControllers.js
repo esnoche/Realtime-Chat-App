@@ -1,6 +1,13 @@
 import { compare } from "bcrypt";
 import User from "../models/UserModel.js";
 import jwt from "jsonwebtoken"
+import { renameSync,mkdirSync ,existsSync, unlinkSync} from "fs"
+import path from "path";
+import { fileURLToPath } from "url";
+import fs from 'fs';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const maxAge = 3 * 24 * 360 * 1000;
 
@@ -94,3 +101,92 @@ export const getUserInfo = async (req, res, next) => {
         return res.status(500).send("Server Error");
     }
 }
+
+
+export const updateProfile = async (req, res, next) => {
+    try{
+        const {userId} = req;
+        const { firstName, lastName, color} = req.body;
+        
+        if(!firstName || !lastName || !color) return res.status(400).send("You have to set your Firstname lastname and color");
+
+        const userData = await User.findByIdAndUpdate(userId, {firstName, lastName, color, profileSetup: true},{new:true, runValidators: true});
+
+        
+        return res.status(200).json({
+            id:userData.id,
+            email:userData.email,
+            profileSetup: userData.profileSetup,
+            firstName:userData.firstName,
+            lastName:userData.lastName,
+            image:userData.image,
+            color:userData.color,
+
+        })
+
+    }catch(err){
+        console.log({err});
+        return res.status(500).send("Server Error");
+    }
+}
+
+export const addProfileImage = async (req, res, next) => {
+    try {
+        if (!req.file) {
+            return res.status(400).send("File is required");
+        }
+        const date = Date.now();
+        const fileExtension = path.extname(req.file.originalname);
+        const uploadDir = path.join(__dirname, '..', 'uploads', 'profiles');
+        const fileName = `${date}${fileExtension}`;
+        const newFilePath = path.join(uploadDir, fileName);
+
+        // Ensure the upload directory exists
+        if (!existsSync(uploadDir)) {
+            mkdirSync(uploadDir, { recursive: true });
+        }
+
+        // Move the file to the new location
+        renameSync(req.file.path, newFilePath);
+
+        const updatedUser = await User.findByIdAndUpdate(req.userId, { image: `/uploads/profiles/${fileName}` }, { new: true, runValidators: true });
+
+        return res.status(200).json({
+            image: updatedUser.image,
+        });
+    } catch (err) {
+        console.log({ err });
+        return res.status(500).send("Server Error");
+    }
+};
+
+
+export const removeProfileImage = async (req, res, next) => {
+    try {
+        const { userId } = req;
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).send("User not found");
+        }
+
+        if (user.image) {
+            // Build the absolute path to the image file
+            const imagePath = path.join(__dirname, '..', 'uploads', 'profiles', path.basename(user.image));
+
+            if (fs.existsSync(imagePath)) {
+                fs.unlinkSync(imagePath);
+            } else {
+                console.log('File not found:', imagePath);
+            }
+        }
+
+        user.image = null;
+        await user.save(); 
+
+        return res.status(200).send("Profile image removed successfully");
+    } catch (err) {
+        console.log({ err });
+        return res.status(500).send("Server Error");
+    }
+};
