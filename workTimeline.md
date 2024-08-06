@@ -49,3 +49,13 @@ Hi! I'm Pratik, a full stack developer currently working on a project called "Re
   - Resolved issues related to incorrect image storage by implementing appropriate file handling logic.
 - Added functionality to delete profile images:
   - Implemented logic to remove the profile image from the file system when a user removes their profile picture.
+
+## Day 7 (06-08-2024): Chat Page Layout
+
+### Chat Page Structure
+- Developed the layout for the chat page, organizing it into distinct containers: `Chat`, `Contacts`, and `EmptyChat`, each with its own `index.jsx` file for better structure and maintainability.
+
+- **Chat Container**: Designed placeholders for `ChatHeader`, `MessageBar`, and `MessageContainer`.
+- **Contacts Container**: Added `ProfileInfoComponent` for user profiles, including edit and logout options. Included app name and a top-left animation.
+- **Empty Chat Container**: Added placeholder for animation when no chats are active.
+- **Styling**: Applied basic styling for a cohesive and user-friendly layout.
