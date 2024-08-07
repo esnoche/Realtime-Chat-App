@@ -59,3 +59,38 @@ Hi! I'm Pratik, a full stack developer currently working on a project called "Re
 - **Contacts Container**: Added `ProfileInfoComponent` for user profiles, including edit and logout options. Included app name and a top-left animation.
 - **Empty Chat Container**: Added placeholder for animation when no chats are active.
 - **Styling**: Applied basic styling for a cohesive and user-friendly layout.
+
+## Day 8 (07-08-2024): Contact Search, UI Enhancements, Zustand State Management & Socket.io
+
+### Contact Search
+- Added "React Faplus" button and Shadcn Dialog for contact search.
+  - Search bar and ScrollArea inside the dialog.
+  - Animated for empty or initial search results.
+
+### Backend Enhancements
+- Added files for better structure:
+  - **`contactsController.js`**: Handles contact operations.
+  - **`contactRoutes.js`**: Manages contact routing.
+- Developed `searchContacts` for efficient querying.
+
+### Zustand State Management
+- Extended Zustand to manage chat state, including type, data, and messages with `chat-slice.js`.
+
+### UI Enhancements
+- **Chat Page**: Updated `index.jsx` with conditional rendering for Chat and EmptyChat.
+- **ChatHeader**: Updated to display user image and name with the close button on the right. Integrated `closeChat` from `useAppStore`.
+
+### Socket Integration
+- Set up Socket.io on the server to manage real-time communication and user connections.
+- **Socket Context and Provider**: Created context and provider using React's `createContext` and `useSocket` hook.
+  - Managed socket connections with `SocketProvider` based on Zustand state.
+  - Utilized `socket.io-client` for real-time communication.
+
+### Message Handling
+- Set up a listener in the SocketProvider to handle incoming messages.
+- Implemented `handleReceiveMessages` function to check if the message belongs to the current chat.
+- Added the message to chat state using `addMessage`.
+
+**Error Note**: Encountered an issue with message rendering that needs to be fixed. Will address this tomorrow.
+
+**Work Duration**: Worked on the project from 8 AM to 11 PM with only 2 meals and a 1-hour tea break(less than 2 hrs).
