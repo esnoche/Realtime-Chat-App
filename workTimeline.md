@@ -95,5 +95,17 @@ Hi! I'm Pratik, a full stack developer currently working on a project called "Re
 
 **Work Duration**: Worked on the project from 8 AM to 11 PM with only 2 meals and a 1-hour tea break(less than 2 hrs).
 
-day 9 (8-8-2024)
-fixed messages not redering problem by updating message model , it took lots of debug then i founnd out there was error in schema itself
+## Day 9 (08-08-2024): Message Rendering Fixes and Final Adjustments
+
+### Issue Resolution & Fix Implemented
+- **Problem**: Encountered an issue with messages not rendering correctly in the chat UI.
+- **Investigation**: Extensive debugging revealed that the issue was due to an error in the message schema.
+- **Schema Update**: Corrected the schema to ensure proper message rendering.
+
+### Feature Development
+- **Conversation History Feature Added**: Developed a `getMessages` function to fetch the entire conversation history from the database.
+- **Contacts History**: Implemented functionality to fetch and display the chat history with contacts, enabling users to select and continue conversations.
+
+### Rest and Recovery
+- **Rest**: Spent the remaining time resting and catching up on sleep after a productive workday.
+
