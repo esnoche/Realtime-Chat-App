@@ -8,6 +8,7 @@ import path from 'path';
 import { fileURLToPath } from "url";
 import contactRoutes from "./routes/ContactRoutes.js"
 import setupSocket from "./socket.js"
+import messagesRoutes from "./routes/MessagesRoutes.js"
 
 
 dotenv.config();
@@ -32,6 +33,7 @@ app.use(express.json());
 
 app.use('/api/auth', authRoutes)
 app.use('/api/contacts', contactRoutes);
+app.use('/api/messages',messagesRoutes);
 
 mongoose
 .connect(databaseURL)
