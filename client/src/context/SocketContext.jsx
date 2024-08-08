@@ -10,7 +10,7 @@ export const useSocket = () => {
 };
 
 export const SocketProvider = ({ children }) => {
-    const socket = useRef();
+    const socket = useRef(null);
     const { userInfo } = useAppStore();
 
     useEffect(() => {
@@ -30,9 +30,8 @@ export const SocketProvider = ({ children }) => {
                 if (
                     selectedChatType !== undefined && 
                     (selectedChatData._id === message.sender._id || selectedChatData._id === message.recipient._id)
-                    
                 ) {
-                    console.log("message rcv", message)
+                    console.log("message rcv", message);
                     addMessage(message);
                 }
             };
@@ -41,9 +40,10 @@ export const SocketProvider = ({ children }) => {
 
             return () => {
                 socket.current.disconnect();
+                socket.current.off("receiveMessage", handleReceiveMessages);
             };
         }
-    }, [userInfo]);
+    }, [userInfo, useAppStore]);
 
     return (
         <SocketContext.Provider value={socket.current}>
