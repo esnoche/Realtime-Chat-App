@@ -94,3 +94,6 @@ Hi! I'm Pratik, a full stack developer currently working on a project called "Re
 **Error Note**: Encountered an issue with message rendering that needs to be fixed. Will address this tomorrow.
 
 **Work Duration**: Worked on the project from 8 AM to 11 PM with only 2 meals and a 1-hour tea break(less than 2 hrs).
+
+day 9 (8-8-2024)
+fixed messages not redering problem by updating message model , it took lots of debug then i founnd out there was error in schema itself
