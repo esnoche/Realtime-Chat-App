@@ -1,10 +1,12 @@
-import { compare } from "bcryptjs";
+import bcrypt from "bcryptjs";
 import User from "../models/UserModel.js";
 import jwt from "jsonwebtoken"
 import { renameSync, mkdirSync, existsSync } from "fs"
 import path from "path";
 import { fileURLToPath } from "url";
 import fs from 'fs';
+
+const { compare } = bcrypt;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
