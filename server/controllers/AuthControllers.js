@@ -1,7 +1,7 @@
-import { compare } from "bcrypt";
+import { compare } from "bcryptjs";
 import User from "../models/UserModel.js";
 import jwt from "jsonwebtoken"
-import { renameSync,mkdirSync ,existsSync, unlinkSync} from "fs"
+import { renameSync, mkdirSync, existsSync } from "fs"
 import path from "path";
 import { fileURLToPath } from "url";
 import fs from 'fs';
@@ -9,123 +9,127 @@ import fs from 'fs';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const maxAge = 3 * 24 * 360 * 1000;
+const maxAge = 3 * 24 * 60 * 60 * 1000;
 
 const creaToken = (email, userId) => {
-    return jwt.sign({email, userId},process.env.JWT_KEY,{expiresIn:maxAge})
+    return jwt.sign({ email, userId }, process.env.JWT_KEY, { expiresIn: maxAge })
 }
 
 
 export const signup = async (req, res, next) => {
-    try{
+    try {
         const { email } = req.body;
         const { password } = req.body;
-        if(!email || !password){
+        if (!email || !password) {
             return res.status(400).send("atleast give me email & password bruhh!")
         }
-        const user = await User.create({email, password});
-        res.cookie("jwt", creaToken(email, user.id),{
+        const user = await User.create({ email, password });
+        res.cookie("jwt", creaToken(email, user.id), {
             maxAge,
-            secure:true,
-            sameSite:"None",
+            secure: true,
+            sameSite: "None",
         })
-        return res.status(201).json({user:{
-            id:user.id,
-            email:user.email,
-            profileSetup: user.profileSetup,
+        return res.status(201).json({
+            user: {
+                id: user.id,
+                email: user.email,
+                profileSetup: user.profileSetup,
 
-        }})
+            }
+        })
 
-    }catch(err){
-        console.log({err});
+    } catch (err) {
+        console.log({ err });
         return res.status(500).send("Server Error");
     }
 }
 
 export const login = async (req, res, next) => {
-    try{
+    try {
         const { email } = req.body;
         const { password } = req.body;
-        if(!email || !password){
+        if (!email || !password) {
             return res.status(400).send("atleast give me email & password bruhh!")
         }
-        const user = await User.findOne({email});
-        if(!user) {
+        const user = await User.findOne({ email });
+        if (!user) {
             return res.status(404).send("i didn't found the user with given Email!")
         }
-        const auth = await compare(password, user.password)
-        if(!auth){
+        const auth = compare(password, user.password)
+        if (!auth) {
             return res.status(400).send("Password is incorrect!")
         }
 
-        res.cookie("jwt", creaToken(email, user.id),{
+        res.cookie("jwt", creaToken(email, user.id), {
             maxAge,
-            secure:true,
-            sameSite:"None",
+            secure: true,
+            sameSite: "None",
         })
-        return res.status(200).json({user:{
-            id:user.id,
-            email:user.email,
-            profileSetup: user.profileSetup,
-            firstName:user.firstName,
-            lastName:user.lastName,
-            image:user.image,
-            color:user.color,
+        return res.status(200).json({
+            user: {
+                id: user.id,
+                email: user.email,
+                profileSetup: user.profileSetup,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                image: user.image,
+                color: user.color,
 
-        }})
+            }
+        })
 
-    }catch(err){
-        console.log({err});
+    } catch (err) {
+        console.log({ err });
         return res.status(500).send("Server Error");
     }
 }
 
 export const getUserInfo = async (req, res, next) => {
-    try{
+    try {
         const userData = await User.findById(req.userId);
-        if(!userData) return res.status(403).send("ohh oo i didn't found the user with the given user id");
-        
+        if (!userData) return res.status(403).send("ohh oo i didn't found the user with the given user id");
+
         return res.status(200).json({
-            id:userData.id,
-            email:userData.email,
+            id: userData.id,
+            email: userData.email,
             profileSetup: userData.profileSetup,
-            firstName:userData.firstName,
-            lastName:userData.lastName,
-            image:userData.image,
-            color:userData.color,
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            image: userData.image,
+            color: userData.color,
 
         })
 
-    }catch(err){
-        console.log({err});
+    } catch (err) {
+        console.log({ err });
         return res.status(500).send("Server Error");
     }
 }
 
 
 export const updateProfile = async (req, res, next) => {
-    try{
-        const {userId} = req;
-        const { firstName, lastName, color} = req.body;
-        
-        if(!firstName || !lastName || !color) return res.status(400).send("You have to set your Firstname lastname and color");
+    try {
+        const { userId } = req;
+        const { firstName, lastName, color } = req.body;
 
-        const userData = await User.findByIdAndUpdate(userId, {firstName, lastName, color, profileSetup: true},{new:true, runValidators: true});
+        if (!firstName || !lastName || !color) return res.status(400).send("You have to set your Firstname lastname and color");
 
-        
+        const userData = await User.findByIdAndUpdate(userId, { firstName, lastName, color, profileSetup: true }, { new: true, runValidators: true });
+
+
         return res.status(200).json({
-            id:userData.id,
-            email:userData.email,
+            id: userData.id,
+            email: userData.email,
             profileSetup: userData.profileSetup,
-            firstName:userData.firstName,
-            lastName:userData.lastName,
-            image:userData.image,
-            color:userData.color,
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            image: userData.image,
+            color: userData.color,
 
         })
 
-    }catch(err){
-        console.log({err});
+    } catch (err) {
+        console.log({ err });
         return res.status(500).send("Server Error");
     }
 }
@@ -182,7 +186,7 @@ export const removeProfileImage = async (req, res, next) => {
         }
 
         user.image = null;
-        await user.save(); 
+        await user.save();
 
         return res.status(200).send("Profile image removed successfully");
     } catch (err) {
@@ -193,7 +197,7 @@ export const removeProfileImage = async (req, res, next) => {
 
 export const logout = async (req, res, next) => {
     try {
-        res.cookie("jwt","",{maxAge:1, secure:true, sameSite:"None"})
+        res.cookie("jwt", "", { maxAge: 1, secure: true, sameSite: "None" })
 
         return res.status(200).send("Logout Successfull");
     } catch (err) {

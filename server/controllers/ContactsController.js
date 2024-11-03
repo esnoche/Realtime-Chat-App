@@ -5,23 +5,23 @@ import Message from "../models/MessageModel.js";
 
 export const searchContacts = async (req, res, next) => {
     try {
-        const {searchT} = req.body;
+        const { searchT } = req.body;
 
-        if(searchT == undefined || searchT == null){
+        if (searchT == undefined || searchT == null) {
             return res.status(400).send("searchTerm is required")
         }
 
         const sanitizedSearchTerm = searchT.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-        const regex = new RegExp(sanitizedSearchTerm, "i") 
+        const regex = new RegExp(sanitizedSearchTerm, "i")
         const contacts = await User.find({
-            $and: [{_id: { $ne: req.userId} }, {
-                $or: [{firstName: regex}, {lastName:regex}, {email:regex}],
+            $and: [{ _id: { $ne: req.userId } }, {
+                $or: [{ firstName: regex }, { lastName: regex }, { email: regex }],
             }]
         })
 
-        return res.status(200).json({contacts});
-        
+        return res.status(200).json({ contacts });
+
     } catch (err) {
         console.log({ err });
         return res.status(500).send("Server Error");
@@ -30,7 +30,7 @@ export const searchContacts = async (req, res, next) => {
 
 export const getContactsForDMList = async (req, res, next) => {
     try {
-        let {userId} = req;
+        let { userId } = req;
         userId = new mongoose.Types.ObjectId(userId);
 
         const contacts = await Message.aggregate([
@@ -79,10 +79,10 @@ export const getContactsForDMList = async (req, res, next) => {
             {
                 $sort: { lastMessageTime: -1 }
             }
-        ]);        
+        ]);
 
-        return res.status(200).json({contacts});
-        
+        return res.status(200).json({ contacts });
+
     } catch (err) {
         console.log({ err });
         return res.status(500).send("Server Error");
