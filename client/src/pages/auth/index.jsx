@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import apiClient from "@/lib/api-client.js"
 import { LOGIN_ROUTE, SIGNUP_ROUTE } from "@/utils/constants";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+// import axios from "axios";
 import { useAppStore } from "@/store";
 
 const Auth = () => {
