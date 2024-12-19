@@ -114,7 +114,8 @@ export const updateProfile = async (req, res, next) => {
         const { userId } = req;
         const { firstName, lastName, color } = req.body;
 
-        if (!firstName || !lastName || !color) return res.status(400).send("You have to set your Firstname lastname and color");
+        // == checks for undefined and null too, while === checks for undefined only
+        if (firstName == undefined || lastName == undefined || color == undefined) return res.status(400).send("You have to set your Firstname lastname and color");
 
         const userData = await User.findByIdAndUpdate(userId, { firstName, lastName, color, profileSetup: true }, { new: true, runValidators: true });
 
