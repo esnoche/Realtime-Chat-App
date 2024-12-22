@@ -15,7 +15,7 @@ dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 7661;
-const databaseURL = process.env.DATABASE_URL;
+const databaseURL = process.env.MONGODB_URL_LOCAL;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
