@@ -23,10 +23,10 @@ const ContactList = ({contacts, isChannel = false}) => {
     }
 
   return (
-    <div className="mt-5">
+    <div className="mt-2 flex flex-col gap-2">
       {
         contacts.map((contact)=> (
-            <div key={contact._id} className={`pl-10 py-2 transition-all duration-300 cursor-pointer 
+            <div key={contact._id} className={`pl-12 pr-4 py-2 transition-all duration-300 cursor-pointer 
                 ${selectedChatData && selectedChatData._id === contact._id
                   ? "bg-[#2a2b36] text-[#00BFFF] font-semibold"
                   : "bg-[#1b1c24] text-[#e0e0e0]"} 

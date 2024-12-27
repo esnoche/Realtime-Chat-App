@@ -43,17 +43,17 @@ const ContactsContainer = () => {
                 SpeedenChat
             </div>
         </div>
-        <div className="my5">
-            <div className="flex items-center justify-center pr-10">
+        <div className="my-2">
+            <div className="flex justify-between items-center px-8">
                 <Title text="Direct messages"/>
                 <NewDM />
             </div>
-            <div className=".max-h-[38vh] overflow-y-auto scrollbar-hidden">
+            <div className="max-h-[38vh] overflow-y-auto scrollbar-hidden">
               <ContactList contacts={directMeassagesContacts}/>
             </div>
         </div>
-        <div className="my5">
-            <div className="flex items-center justify-center pr-20 mr-3">
+        <div className="my-2">
+            <div className="flex items-center px-8">
                 <Title text="Channels"/>
             </div>
         </div>
@@ -67,7 +67,7 @@ const ContactsContainer = () => {
 
   const Title = ({ text }) => {
     return (
-      <h6 className="uppercase tracking-widest text-neutral-400 font-light text-opacity-90 text-sm text-left pt-3">
+      <h6 className="uppercase tracking-widest text-neutral-400 font-light text-opacity-90 text-sm text-left">
         {text}
       </h6>
     );
